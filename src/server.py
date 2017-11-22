@@ -149,18 +149,22 @@ def gernerate_ldif(user_id):
 		res.append((i[0], i[1]))
 	return res
 
-# Update Passwords
-def update_password(user_id):
-	args = parser.parse_args()
-	old = {'userPassword':''} # Remove Old Password
-	new = {'userPassword':make_secret(args["userPassword"])} # Set New Password
-
-	return modlist.modifyModlist(old,new)
-
 # Get LDAP DN string.
 def get_dn(user_id):
 	return filter_result(con.search_s(BASE_DN, ldap.SCOPE_SUBTREE, "(uid=%s)" % (user_id,)))
 
+# Add user
+def add_user():
+	args = parser.parse_args()
+	ldif = gernerate_ldif(args['uid'])
+	#pickle.dump(ldif, open("data", "wb"))
+	try:
+		con.add_s("uid=%s,ou=People,%s" % (args['uid'], BASE_DN), ldif)
+		return {'message':"OK"}
+	except Exception as e:
+		abort(500, "FAILED - %s" % (e.message,))
+
+####################################################
 class LDAPUsers(Resource):
 	# User info get
 	def get(self, user_id):
@@ -169,14 +173,7 @@ class LDAPUsers(Resource):
 
 	def put(self, user_id):
 		abort_if_ip_not_allowed()
-		args = parser.parse_args()
-		ldif = gernerate_ldif(args['uid'])
-		#pickle.dump(ldif, open("data", "wb"))
-		try:
-			con.add_s("uid=%s,ou=People,%s" % (args['uid'], BASE_DN), ldif)
-			return {'message':"OK"}
-		except Exception as e:
-			abort(500, "FAILED - %s" % (e.message,))
+		return add_user()
 
 	def delete(self, user_id):
 		abort_if_ip_not_allowed()
@@ -196,15 +193,10 @@ class LDAPUsersAll(Resource):
 		abort_if_ip_not_allowed()
 		res = con.search_s(BASE_DN, ldap.SCOPE_SUBTREE, SEARCH_SCOPE)
 		return filter_result(res)
+
 	def put(self):
 		abort_if_ip_not_allowed()
-		args = parser.parse_args()
-		ldif = gernerate_ldif(args['uid'])
-		try:
-			con.add_s("uid=%s,ou=People,%s" % (args['uid'], BASE_DN), ldif)
-			return {'message':"OK"}
-		except Exception as e:
-			abort(500, "FAILED - %s" % (e.message,))
+		return add_user()
 
 # Password Update
 class LDAPPassword(Resource):
@@ -238,11 +230,12 @@ class LDAPPassword(Resource):
 		except Exception as e:
 			abort(500, "FAILED - Login Error: " + str(e.message["desc"]))
 
-#api.add_resource(LDAPUsersAll,'/Users')
+####################################################
 api.add_resource(LDAPUsers, '/Users/<string:user_id>')
 api.add_resource(LDAPUsersAll,'/Users')
 api.add_resource(LDAPPassword, '/Password/<string:user_id>')
 
+####################################################
 if __name__ == '__main__':
     app.run(host=BIND_ADDR, debug=DEBUG)
 
