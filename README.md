@@ -19,6 +19,11 @@ docker run -d --name gateway \
   -p 5000:5000 ldap-gateway
 ```
 
+# Configuration
+* You have to change login and server connection infomation.
+* configuration is at /opt/conf.py (Source conf.py)
+
+
 # Copyright
 MIT Licese
 * If you need to fix code, Just do it :)
