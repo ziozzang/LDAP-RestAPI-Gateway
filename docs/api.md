@@ -219,31 +219,42 @@ curl -X PUT http://foo.com:5000/Password/[user_id]
 * PATH: /Users
 * Method: PUT
 * Params *WARNING: Case Sensetive*
-        * mobile :Phone Number
-        * telephonenumber :  Phone Number
-        * mail : E-Mail
-        * memberUid : member uid
-        * o : Oraganization / Company
-        * ou : Organization Units / Departments
-        * cn :  Common Name
-        * sn :  Sur Name(Last Name/Familiy Name)
-        * uid :  (mandatory) User ID
-        * givenName :  Given Name
-        * title :  Job Title
-        * objectClass :  Object Class
-        * displayName :  (mandatory) Full Name
-        * uidNumber :  (mandatory) UNIX UID Number
-        * gidNumber :  UNIX GroupID
-        * description : Description
-        * nickname :  nickname
-        * homeDirectory :  home Directory for POSIX Account
-        * userPassword :  (mandatory) Password
+  * cn :  (mandatory) Common Name
+  * uid :  (mandatory) User ID
+  * displayName :  (mandatory) Full Name
+  * uidNumber :  (mandatory) UNIX UID Number
+  * userPassword :  (mandatory) Password
+  * mobile :Phone Number
+  * telephonenumber :  Phone Number
+  * mail : E-Mail
+  * memberUid : member uid
+  * o : Oraganization / Company
+  * ou : Organization Units / Departments
+  * sn :  Sur Name(Last Name/Familiy Name)
+  * givenName :  Given Name
+  * title :  Job Title
+  * objectClass :  Object Class
+  * gidNumber :  UNIX GroupID
+  * description : Description
+  * nickname :  nickname
+  * homeDirectory :  home Directory for POSIX Account
+
 * Request Example
+
 ```
 curl -X PUT http://foo.com:5000/Users
 ```
 
 * Result: JSON type
 ```
-[
+# Success
+{
+	"message": "OK"
+}
+
+# Failed
+{
+	"message": "Failed - No such User"
+}
+
 ```
