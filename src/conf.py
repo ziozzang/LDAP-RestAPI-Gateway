@@ -19,6 +19,9 @@ ADMIN = {
 # Get /Users or /Users/[user_id] 's result filtering. (no passwrd or JPEG images showing)
 KEYS_FILTER = ["jpegPhoto","userPassword"]
 
+# ID's who Result Filters (For Managements ID or some.)
+IDS_FILTER = ["system", ]
+
 # Get /Users or /Users/[user_id] 's result filtering. (Only show person)
 SEARCH_SCOPE='(objectclass=person)'
 

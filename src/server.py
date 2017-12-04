@@ -102,6 +102,8 @@ def filter_result(lists):
 	res = []
 	for i in lists:
 		# To set case insensative matching
+		if i[1]["uid"] in IDS_FILTER:
+			continue
 		k = { x.lower():x for  x in i[1].keys() }
 		for j in KEYS_FILTER:
 			if j.lower() in k.keys():
